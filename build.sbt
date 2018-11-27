@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
     scalaVersion := "2.12.6",
     libraryDependencies ++= doobie,
     libraryDependencies ++= common,
-    libraryDependencies ++= playCommon
+    libraryDependencies ++= playCommon,
+    libraryDependencies ++= pac4j
   )
   .enablePlugins(PlayScala)
