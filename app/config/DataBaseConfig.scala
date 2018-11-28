@@ -4,6 +4,10 @@ import cats.effect._
 import cats.implicits._
 import doobie.hikari._
 import doobie.util.ExecutionContexts
+import javax.inject.Inject
+import pureconfig.loadConfigOrThrow
+
+import scala.concurrent.ExecutionContext
 
 case class DataBaseConfig(
                            driver: String,
@@ -16,7 +20,7 @@ case class DataBaseConfig(
 
 object DataBaseConfig {
 
-  def dbTransactor[F[_] : Async](
+  def dbTransactor(
                                   dataBaseConfig: DataBaseConfig)(implicit cs: ContextShift[IO]): Resource[IO, HikariTransactor[IO]] =
     for {
       ce <- ExecutionContexts.fixedThreadPool[IO](dataBaseConfig.poolSize) // our connect EC
@@ -31,4 +35,13 @@ object DataBaseConfig {
       )
     } yield xa
 
+}
+
+class DataBaseConfigHolder @Inject() (c : IOContextShift){
+  implicit val cs: ContextShift[IO] = c.cs
+  val dataBaseConfig: DataBaseConfig = loadConfigOrThrow[_root_.config.DataBaseConfig]("db.default")
+}
+
+class IOContextShift{
+  val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
 }
