@@ -1,23 +1,19 @@
 package domian.user
 
-import cats.effect.Async
+import cats.effect.IO
+import javax.inject.Inject
 
-class UserService[F[_] : Async](userRepository: UserRepository[F]) {
+class UserService @Inject()(userRepository: UserRepository) {
 
-  def createUser(user: User): F[Int] =
+  def createUser(user: User): IO[Int] =
     userRepository.create(user)
 
-  def getUser(id: String): F[Option[User]] = userRepository.get(id)
+  def getUser(id: String): IO[Option[User]] = userRepository.get(id)
 
-  def deleteUser(id: String): F[Int] =
+  def deleteUser(id: String): IO[Int] =
     userRepository.delete(id)
 
-  def updateUser(user: User): F[Int] =
+  def updateUser(user: User): IO[Int] =
     userRepository.put(user)
 
-}
-
-object UserService {
-  def apply[F[_] : Async](userRepository: UserRepository[F]): UserService[F] =
-    new UserService(userRepository)
 }

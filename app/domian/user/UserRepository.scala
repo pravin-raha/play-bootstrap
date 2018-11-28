@@ -1,12 +1,17 @@
 package domian.user
 
-trait UserRepository[F[_]] {
+import cats.effect.IO
+import com.google.inject.ImplementedBy
+import repository.doobie.UserRepositoryInterpreter
 
-  def create(user: User): F[Int]
+@ImplementedBy(classOf[UserRepositoryInterpreter])
+trait UserRepository {
 
-  def get(id: String): F[Option[User]]
+  def create(user: User): IO[Int]
 
-  def delete(id: String): F[Int]
+  def get(id: String): IO[Option[User]]
 
-  def put(user: User): F[Int]
+  def delete(id: String): IO[Int]
+
+  def put(user: User): IO[Int]
 }
