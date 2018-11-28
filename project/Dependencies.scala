@@ -5,6 +5,10 @@ object Dependencies {
   lazy val doobieVersion = "0.6.0"
   lazy val flywayDb = "5.1.4"
 
+  val playVersion = "2.6.18"
+  val playPac4jVersion = "6.1.0"
+  val pac4jVersion = "3.4.0"
+
   val doobie = Seq(
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.tpolecat" %% "doobie-specs2" % doobieVersion,
@@ -27,10 +31,31 @@ object Dependencies {
     "com.typesafe.play" %% "play-json" % "2.6.10"
   )
 
-  val pac4jOidc = "org.pac4j" % "pac4j-oidc" % "3.2.0"
+  val pac4j = Seq(
+    guice,
+    ehcache, // or cacheApi
+    ws,
+    filters,
+    "org.pac4j" %% "play-pac4j" % playPac4jVersion,
+    "org.pac4j" % "pac4j-http" % pac4jVersion,
+    "org.pac4j" % "pac4j-cas" % pac4jVersion,
+    "org.pac4j" % "pac4j-openid" % pac4jVersion exclude("xml-apis" , "xml-apis"),
+    "org.pac4j" % "pac4j-oauth" % pac4jVersion,
+//    "org.pac4j" % "pac4j-saml" % pac4jVersion,
+    "org.pac4j" % "pac4j-oidc" % pac4jVersion exclude("commons-io" , "commons-io"),
+    "org.pac4j" % "pac4j-gae" % pac4jVersion,
+    "org.pac4j" % "pac4j-jwt" % pac4jVersion exclude("commons-io" , "commons-io"),
+    "org.pac4j" % "pac4j-ldap" % pac4jVersion,
+    "org.pac4j" % "pac4j-sql" % pac4jVersion,
+    "org.pac4j" % "pac4j-mongo" % pac4jVersion,
+    "org.pac4j" % "pac4j-kerberos" % pac4jVersion,
+    "org.pac4j" % "pac4j-couch" % pac4jVersion,
+    "org.apache.shiro" % "shiro-core" % "1.4.0",
+    "com.typesafe.play" % "play-cache_2.12" % playVersion,
+    "commons-io" % "commons-io" % "2.5"
+  )
 
   val playCommon = Seq(
-    guice,
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
   )
 
