@@ -15,7 +15,7 @@ class HomeController (val controllerComponents: SecurityComponents, userService:
   extends Security[CommonProfile]
 {
 
-  def index() = Secure("FacebookClient") { implicit request: Request[AnyContent] =>
+  def index() = Secure("DirectBasicAuthClient") { implicit request: Request[AnyContent] =>
     userService
       .getUser("101")
       .map {

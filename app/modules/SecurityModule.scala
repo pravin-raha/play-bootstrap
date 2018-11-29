@@ -5,6 +5,8 @@ import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer
 import org.pac4j.core.client.Clients
 import org.pac4j.core.config.Config
 import org.pac4j.core.matching.PathMatcher
+import org.pac4j.http.client.direct.DirectBasicAuthClient
+import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator
 import org.pac4j.oauth.client.FacebookClient
 import org.pac4j.oidc.client.OidcClient
 import org.pac4j.oidc.config.OidcConfiguration
@@ -35,8 +37,11 @@ class SecurityModule(environment: Environment, configuration: Configuration) {
     oidcClient
   }
 
+  def provideDirectBasicAuthClient: DirectBasicAuthClient = new DirectBasicAuthClient(new SimpleTestUsernamePasswordAuthenticator)
+
+
   def provideConfig(): Config = {
-    val clients = new Clients(baseUrl + "/callback", provideFacebookClient)
+    val clients = new Clients(baseUrl + "/callback", provideDirectBasicAuthClient)
 
     val config = new Config(clients)
     config.addAuthorizer("admin", new RequireAnyRoleAuthorizer[Nothing]("ROLE_ADMIN"))
