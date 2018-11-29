@@ -1,7 +1,7 @@
 package controllers
 
 import cats.effect._
-import domian.user.UserService
+import domain.user.UserService
 import javax.inject.Inject
 import org.pac4j.core.client.IndirectClient
 import org.pac4j.core.context.Pac4jConstants
@@ -26,12 +26,10 @@ class HomeController @Inject()(val controllerComponents: SecurityComponents, use
 
   }
 
-
   def loginForm = Action { request =>
     val formClient = config.getClients.findClient("FormClient").asInstanceOf[FormClient]
     Ok(views.html.loginForm.render(formClient.getCallbackUrl))
   }
-
 
   def forceLogin = Action { request =>
     val context: PlayWebContext = new PlayWebContext(request, playSessionStore)

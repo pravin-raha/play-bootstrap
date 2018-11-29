@@ -1,4 +1,4 @@
-package domian.user
+package domain.user
 
 import cats.effect.IO
 import javax.inject.Inject

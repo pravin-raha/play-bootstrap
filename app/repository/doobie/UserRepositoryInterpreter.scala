@@ -3,7 +3,7 @@ package repository.doobie
 import cats.effect.IO
 import config.IOContextShift
 import db.Db
-import domian.user.{User, UserRepository}
+import domain.user.{User, UserRepository}
 import doobie.implicits._
 import doobie.util.log.LogHandler
 import doobie.util.update.Update0

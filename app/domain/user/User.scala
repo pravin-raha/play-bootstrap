@@ -1,4 +1,4 @@
-package domian.user
+package domain.user
 
 import play.api.libs.json.{Json, OFormat}
 

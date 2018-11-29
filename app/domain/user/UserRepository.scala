@@ -1,4 +1,4 @@
-package domian.user
+package domain.user
 
 import cats.effect.IO
 import com.google.inject.ImplementedBy

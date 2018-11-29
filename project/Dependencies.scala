@@ -51,7 +51,7 @@ object Dependencies {
     "org.pac4j" % "pac4j-kerberos" % pac4jVersion,
     "org.pac4j" % "pac4j-couch" % pac4jVersion,
     "org.apache.shiro" % "shiro-core" % "1.4.0",
-    "com.typesafe.play" % "play-cache_2.12" % playVersion,
+    "com.typesafe.play" %% "play-cache" % playVersion,
     "commons-io" % "commons-io" % "2.5"
   )
 
@@ -59,4 +59,7 @@ object Dependencies {
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
   )
 
+  val playSwagger = Seq(
+    "org.webjars" % "swagger-ui" % "2.2.0"
+  )
 }

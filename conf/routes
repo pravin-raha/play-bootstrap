@@ -1,15 +1,33 @@
 
-# An example controller showing a sample home page
+###
+#  summary: get user
+#  tags:
+#    - User Endpoints
+#  responses:
+#    200:
+#      description: success
+#      schema:
+#        $ref: '#/definitions/domain.user.User'
+###
 GET     /                           controllers.HomeController.index
 
-
+### NoDocs ###
 GET         /loginForm                        controllers.HomeController.loginForm()
+### NoDocs ###
 GET         /forceLogin                       controllers.HomeController.forceLogin()
+### NoDocs ###
 GET         /callback                         @org.pac4j.play.CallbackController.callback()
+### NoDocs ###
 POST        /callback                         @org.pac4j.play.CallbackController.callback()
+### NoDocs ###
 GET         /casProxyCallback                 @org.pac4j.play.CallbackController.callback()
+### NoDocs ###
 POST        /casProxyCallback                 @org.pac4j.play.CallbackController.callback()
+### NoDocs ###
 GET         /logout                           @org.pac4j.play.LogoutController.logout()
 
-# Map static resources from the /public folder to the /assets URL path
+### NoDocs ###
+GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
+
+### NoDocs ###
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

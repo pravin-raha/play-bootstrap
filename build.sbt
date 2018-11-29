@@ -10,6 +10,9 @@ lazy val root = (project in file("."))
     libraryDependencies ++= doobie,
     libraryDependencies ++= common,
     libraryDependencies ++= playCommon,
-    libraryDependencies ++= pac4j
+    libraryDependencies ++= pac4j,
+    libraryDependencies ++= playSwagger,
+    resolvers += Resolver.jcenterRepo,
+    swaggerDomainNameSpaces := Seq("domain.user")
   )
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala,SwaggerPlugin)

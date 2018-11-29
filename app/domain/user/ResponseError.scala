@@ -1,4 +1,4 @@
-package domian.user
+package domain.user
 
 sealed abstract class ResponseError(status: Int, massage: String)
 
