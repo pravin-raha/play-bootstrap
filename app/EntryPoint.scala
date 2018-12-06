@@ -47,7 +47,7 @@ class Components(context: ApplicationLoader.Context)
   logoutController.setDefaultUrl("/")
   lazy val userRepoInterpreter = _root_.repository.doobie.UserRepositoryInterpreter(transactor)
   lazy val userService = _root_.domian.user.UserService(userRepoInterpreter)
-  lazy val securityComponents = new DefaultSecurityComponents(playSessionStore, config, parser, components);
+  lazy val securityComponents = DefaultSecurityComponents(playSessionStore, config, parser, components)
 
   lazy val homeController = new _root_.controllers.HomeController(securityComponents, userService = userService)
   lazy val router: Router = new _root_.router.Routes(
@@ -57,7 +57,7 @@ class Components(context: ApplicationLoader.Context)
     logoutController,
     assets
   )
-  val sKey = configuration.get[String]("play.http.secret.key").substring(0, 16)
+  val sKey: String = configuration.get[String]("play.http.secret.key").substring(0, 16)
   val dataEncrypter = new _root_.org.pac4j.play.store.ShiroAesDataEncrypter(sKey)
   override lazy val playSessionStore = new _root_.org.pac4j.play.store.PlayCookieSessionStore(dataEncrypter)
   override lazy val components: ControllerComponents = controllerComponents
