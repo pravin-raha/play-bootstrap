@@ -24,7 +24,7 @@ private object UserSql {
   def update(user: User): doobie.Update0 = sql"update USER set id = ${user.id}, name = ${user.name}, email = ${user.email} where id = ${user.id}".updateWithLogHandler(LogHandler.jdkLogHandler)
 }
 
-class UserRepositoryInterpreter[F[_] : Async](transactor: Resource[F, HikariTransactor[F]])(implicit cs: ContextShift[IO])
+class UserRepositoryInterpreter[F[_] : Async](transactor: Resource[F, HikariTransactor[F]])(implicit cs: ContextShift[F])
   extends UserRepository[F] {
 
   import UserSql._
@@ -41,6 +41,6 @@ class UserRepositoryInterpreter[F[_] : Async](transactor: Resource[F, HikariTran
 
 object UserRepositoryInterpreter {
   def apply[F[_] : Monad : Async](
-                                   transactor: Resource[F, HikariTransactor[F]])(implicit cs: ContextShift[IO]): UserRepositoryInterpreter[F] =
+                                   transactor: Resource[F, HikariTransactor[F]])(implicit cs: ContextShift[F]): UserRepositoryInterpreter[F] =
     new UserRepositoryInterpreter[F](transactor)
 }

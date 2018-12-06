@@ -17,11 +17,11 @@ case class DataBaseConfig(
 object DataBaseConfig {
 
   def dbTransactor[F[_] : Async](
-                                  dataBaseConfig: DataBaseConfig)(implicit cs: ContextShift[IO]): Resource[IO, HikariTransactor[IO]] =
+                                  dataBaseConfig: DataBaseConfig)(implicit cs: ContextShift[F]): Resource[F, HikariTransactor[F]] =
     for {
-      ce <- ExecutionContexts.fixedThreadPool[IO](dataBaseConfig.poolSize) // our connect EC
-      te <- ExecutionContexts.cachedThreadPool[IO] // our transaction EC
-      xa <- HikariTransactor.newHikariTransactor[IO](
+      ce <- ExecutionContexts.fixedThreadPool[F](dataBaseConfig.poolSize) // our connect EC
+      te <- ExecutionContexts.cachedThreadPool[F] // our transaction EC
+      xa <- HikariTransactor.newHikariTransactor[F](
         dataBaseConfig.driver,
         dataBaseConfig.url,
         dataBaseConfig.username,
