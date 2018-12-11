@@ -3,17 +3,17 @@ package domain.user
 import cats.effect.IO
 import javax.inject.Inject
 
-class UserService @Inject()(userRepository: UserRepository) {
+class UserService[F[_]] @Inject()(userRepository: UserRepository[F]) {
 
-  def createUser(user: User): IO[Int] =
+  def createUser(user: User): F[Int] =
     userRepository.create(user)
 
-  def getUser(id: String): IO[Option[User]] = userRepository.get(id)
+  def getUser(id: String): F[Option[User]] = userRepository.get(id)
 
-  def deleteUser(id: String): IO[Int] =
+  def deleteUser(id: String): F[Int] =
     userRepository.delete(id)
 
-  def updateUser(user: User): IO[Int] =
+  def updateUser(user: User): F[Int] =
     userRepository.put(user)
 
 }

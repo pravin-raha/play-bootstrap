@@ -27,7 +27,7 @@ private object UserSql {
 
 @Singleton
 class UserRepositoryInterpreter @Inject()(db: Db, c: IOContextShift)
-  extends UserRepository {
+  extends UserRepository[IO] {
 
   import UserSql._
 

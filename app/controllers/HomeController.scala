@@ -13,10 +13,10 @@ import org.pac4j.play.scala.{Security, SecurityComponents}
 import play.api.libs.json._
 import play.api.mvc._
 
-class HomeController @Inject()(val controllerComponents: SecurityComponents, userService: UserService)
+class HomeController @Inject()(val controllerComponents: SecurityComponents, userService: UserService[IO])
   extends  Security[CommonProfile] {
 
-  def index() = Secure("FormClient") { implicit request: Request[AnyContent] =>
+  def index(): Action[AnyContent] = Secure("FormClient") { implicit request: Request[AnyContent] =>
     userService
       .getUser("101")
       .map {
@@ -26,7 +26,7 @@ class HomeController @Inject()(val controllerComponents: SecurityComponents, use
 
   }
 
-  def loginForm = Action { request =>
+  def loginForm = Action { _ =>
     val formClient = config.getClients.findClient("FormClient").asInstanceOf[FormClient]
     Ok(views.html.loginForm.render(formClient.getCallbackUrl))
   }

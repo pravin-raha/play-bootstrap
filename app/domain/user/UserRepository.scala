@@ -5,13 +5,13 @@ import com.google.inject.ImplementedBy
 import repository.doobie.UserRepositoryInterpreter
 
 @ImplementedBy(classOf[UserRepositoryInterpreter])
-trait UserRepository {
+trait UserRepository[F[_]] {
 
-  def create(user: User): IO[Int]
+  def create(user: User): F[Int]
 
-  def get(id: String): IO[Option[User]]
+  def get(id: String): F[Option[User]]
 
-  def delete(id: String): IO[Int]
+  def delete(id: String): F[Int]
 
-  def put(user: User): IO[Int]
+  def put(user: User): F[Int]
 }
