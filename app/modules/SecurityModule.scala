@@ -12,13 +12,12 @@ import org.pac4j.core.profile.CommonProfile
 import org.pac4j.http.client.direct.{DirectBasicAuthClient, ParameterClient}
 import org.pac4j.http.client.indirect.{FormClient, IndirectBasicAuthClient}
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator
-import org.pac4j.oauth.client.{FacebookClient, Google2Client, OAuth10Client, TwitterClient}
-import org.pac4j.oauth.profile.OAuth10Profile
+import org.pac4j.oauth.client.{FacebookClient, TwitterClient}
 import org.pac4j.oidc.client.OidcClient
 import org.pac4j.oidc.config.OidcConfiguration
 import org.pac4j.oidc.profile.OidcProfile
 import org.pac4j.play.scala.{DefaultSecurityComponents, Pac4jScalaTemplateHelper, SecurityComponents}
-import org.pac4j.play.store.{PlayCacheSessionStore, PlayCookieSessionStore, PlaySessionStore, ShiroAesDataEncrypter}
+import org.pac4j.play.store.{PlayCookieSessionStore, PlaySessionStore, ShiroAesDataEncrypter}
 import org.pac4j.play.{CallbackController, LogoutController}
 import play.api.{Configuration, Environment}
 
@@ -31,6 +30,7 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
     val dataEncrypter = new ShiroAesDataEncrypter(sKey)
     val playSessionStore = new PlayCookieSessionStore(dataEncrypter)
     bind(classOf[PlaySessionStore]).toInstance(playSessionStore)
+
 
     bind(classOf[SecurityComponents]).to(classOf[DefaultSecurityComponents])
 
@@ -45,6 +45,7 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
     // logout
     val logoutController = new LogoutController()
     logoutController.setDefaultUrl("/")
+//    logoutController.setDestroySession(true)
     bind(classOf[LogoutController]).toInstance(logoutController)
   }
 
@@ -58,11 +59,12 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
   @Provides
   def provideOidcClient: OidcClient[OidcProfile, OidcConfiguration] = {
     val oidcConfiguration = new OidcConfiguration()
-    val key = configuration.getOptional[String]("googleKey").get
-    val secret = configuration.getOptional[String]("googleSecret").get
+    val key = configuration.getOptional[String]("oidcClientId").get
+    val secret = configuration.getOptional[String]("oidcClientSecrect").get
     oidcConfiguration.setClientId(key)
     oidcConfiguration.setSecret(secret)
-    oidcConfiguration.setDiscoveryURI("https://accounts.google.com/.well-known/openid-configuration")
+    oidcConfiguration.setLogoutUrl("/logout")
+    oidcConfiguration.setDiscoveryURI("http://localhost:8080/auth/realms/demo/.well-known/openid-configuration")
     //    oidcConfiguration.addCustomParam("prompt", "consent")
     val oidcClient = new OidcClient[OidcProfile, OidcConfiguration](oidcConfiguration)
     //    oidcClient.addAuthorizationGenerator(new RoleAdminAuthGenerator)
@@ -78,9 +80,10 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
   @Provides
   def provideConfig(facebookClient: FacebookClient, twitterClient: TwitterClient, formClient: FormClient, indirectBasicAuthClient: IndirectBasicAuthClient,
                     casClient: CasClient, oidcClient: OidcClient[OidcProfile, OidcConfiguration], parameterClient: ParameterClient, directBasicAuthClient: DirectBasicAuthClient): Config = {
-    val clients = new Clients(baseUrl + "/callback", provideFormClient, provideDirectBasicAuthClient,new AnonymousClient())
+    val clients = new Clients(baseUrl + "/callback", provideFormClient, provideDirectBasicAuthClient,provideOidcClient)
 
     val config = new Config(clients)
+
     config.addAuthorizer("admin", new RequireAnyRoleAuthorizer[Nothing]("ROLE_ADMIN"))
     config.addAuthorizer("custom", new CustomAuthorizer)
     config.addMatcher("excludedPath", new PathMatcher().excludeRegex("^/facebook/notprotected\\.html$"))

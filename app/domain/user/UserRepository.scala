@@ -1,6 +1,5 @@
 package domain.user
 
-import cats.effect.IO
 import com.google.inject.ImplementedBy
 import repository.doobie.UserRepositoryInterpreter
 

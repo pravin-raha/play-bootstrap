@@ -1,6 +1,5 @@
 package domain.user
 
-import cats.effect.IO
 import javax.inject.Inject
 
 class UserService[F[_]] @Inject()(userRepository: UserRepository[F]) {

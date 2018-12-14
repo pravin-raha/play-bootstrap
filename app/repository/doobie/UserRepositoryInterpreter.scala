@@ -1,6 +1,6 @@
 package repository.doobie
 
-import cats.effect.IO
+import cats.effect.{ContextShift, IO}
 import config.IOContextShift
 import db.Db
 import domain.user.{User, UserRepository}
@@ -11,7 +11,7 @@ import javax.inject.{Inject, Singleton}
 
 private object UserSql {
   def insert(user: User): Update0 =
-    sql"insert into USER (id, name, email) values (${user.id.get}, ${user.name}, ${user.email})".updateWithLogHandler(LogHandler.jdkLogHandler)
+    sql"insert into USER (id, name, email, created, role) values (${user.id}, ${user.name}, ${user.email},, ${user.created}, ${user.role})".updateWithLogHandler(LogHandler.jdkLogHandler)
 
   def select(id: String): doobie.Query0[User] = sql"""
     SELECT *
@@ -31,7 +31,7 @@ class UserRepositoryInterpreter @Inject()(db: Db, c: IOContextShift)
 
   import UserSql._
 
-  implicit val cs = c.cs
+  implicit val cs: ContextShift[IO] = c.cs
 
   override def create(user: User): IO[Int] = db.transactor.use(xa => insert(user).run.transact(xa))
 
